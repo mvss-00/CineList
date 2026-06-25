@@ -7,8 +7,14 @@ import { Button } from "@/components/ui/button";
 import { TrendingUp, Rss, Film } from "lucide-react";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase unavailable
+  }
 
   let trending: import("@/types/tmdb").TMDBMedia[] = [];
   try {
